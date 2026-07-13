@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "endstone-bundle-anti-dupe"
+version = "0.2.0"
+description = "A plugin that disables bundle duplication in hoppers and droppers, with config, stats, history and an in-game admin menu."
+authors = [
+    { name = "MakiTazo" }
+]
+dependencies = [
+    "endstone"
+]
+
+[project.entry-points."endstone"]
+"bundle_anti_dupe" = "endstone_bundle_anti_dupe.plugin:AntiBundleDuping"
