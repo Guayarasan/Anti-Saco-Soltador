@@ -3,15 +3,25 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "endstone-bundle-anti-dupe"
-version = "0.2.0"
-description = "A plugin that disables bundle duplication in hoppers and droppers, with config, stats, history and an in-game admin menu."
-authors = [
-    { name = "MakiTazo" }
-]
+name = "endstone-antidupe"
+version = "1.0.0"
+description = "Modular, production-grade anti-duplication framework for Endstone (Minecraft Bedrock)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "AntiDupe Project" }]
 dependencies = [
-    "endstone"
+    "endstone",
+    "PyYAML>=6.0",
 ]
 
 [project.entry-points."endstone"]
-"bundle_anti_dupe" = "endstone_bundle_anti_dupe.plugin:AntiBundleDuping"
+"antidupe" = "endstone_antidupe.plugin:AntiDupePlugin"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/endstone_antidupe"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"resources/config.yml" = "endstone_antidupe/resources/config.yml"
+"resources/locales/en_US.yml" = "endstone_antidupe/resources/locales/en_US.yml"
+"resources/locales/es_ES.yml" = "endstone_antidupe/resources/locales/es_ES.yml"

@@ -1,0 +1,34 @@
+plugin:
+  enabled: "§a[AntiDupe] Plugin habilitado ({detector_count} detectores activos)."
+  disabled: "§7[AntiDupe] Plugin deshabilitado."
+  reload_success: "§a[AntiDupe] Configuración recargada correctamente."
+  reload_failed: "§c[AntiDupe] Error al recargar: {error}"
+
+alert:
+  broadcast: "§e[AntiDupe] §f{player} §7activó §b{detector} §7(confianza: §f{confidence}%§7)"
+  severe: "§c§l[AntiDupe] ALERTA GRAVE: §r§c¡{player} activó {detector} repetidamente!"
+
+command:
+  no_permission: "§cNo tienes permiso para usar este comando."
+  unknown_subcommand: "§cSubcomando desconocido. Usa /antidupe help."
+  player_not_found: "§cJugador '{player}' no encontrado o sin historial."
+  stats_header: "§b=== Estadísticas de AntiDupe ==="
+  stats_line: "§7{detector}: §f{count} detecciones"
+  stats_total: "§7Total de detecciones: §f{total}"
+  history_header: "§b=== Historial de {player} (página {page}/{pages}) ==="
+  history_line: "§7[{time}] §b{detector} §7en §f{x},{y},{z} §7(§f{confidence}%§7)"
+  logs_cleared: "§a[AntiDupe] Todos los registros han sido eliminados."
+  toggle_detector: "§a[AntiDupe] El detector '{detector}' ahora está {state}."
+  help_header: "§b=== Comandos de AntiDupe ==="
+
+detector:
+  bundle_container:
+    name: "Bundle en contenedor"
+    reason: "Bundle detectado dentro de {container_type}"
+  bundle_ground:
+    name: "Bundle en el suelo"
+    reason: "Item bundle restringido tirado en el suelo"
+
+state:
+  enabled: "habilitado"
+  disabled: "deshabilitado"
