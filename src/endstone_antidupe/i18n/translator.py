@@ -36,14 +36,14 @@ class Translator:
             return
         path = self._locales_dir / f"{locale}.yml"
         if not path.exists():
-            self._logger.warning("Locale '%s' not found, falling back to %s", locale, FALLBACK_LOCALE)
+            self._logger.warning(f"Locale '{locale}' not found, falling back to {FALLBACK_LOCALE}")
             self._catalogs[locale] = {}
             return
         try:
             with path.open("r", encoding="utf-8") as fh:
                 self._catalogs[locale] = yaml.safe_load(fh) or {}
         except Exception as exc:  # noqa: BLE001
-            self._logger.warning("Failed to load locale '%s': %s", locale, exc)
+            self._logger.warning(f"Failed to load locale '{locale}': {exc}")
             self._catalogs[locale] = {}
 
     def _lookup(self, catalog: dict, dotted_key: str):

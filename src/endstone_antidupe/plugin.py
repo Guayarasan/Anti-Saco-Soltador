@@ -63,7 +63,11 @@ class AntiDupePlugin(Plugin):
         try:
             self._bootstrap()
         except Exception as exc:  # noqa: BLE001 - startup must never crash the server
-            self.logger.error("AntiDupe failed to start cleanly: %s", exc, exc_info=True)
+            import traceback
+
+            self.logger.error(
+                f"AntiDupe failed to start cleanly: {exc}\n{traceback.format_exc()}"
+            )
             return
 
         active = self._registry.register_all()
@@ -76,7 +80,7 @@ class AntiDupePlugin(Plugin):
             self._registry.unregister_all()
             self._repository.close()
         except Exception as exc:  # noqa: BLE001
-            self.logger.warning("Error during shutdown: %s", exc)
+            self.logger.warning(f"Error during shutdown: {exc}")
         self.logger.info(self._translator.t("plugin.disabled"))
 
     def on_command(self, sender, command, args) -> bool:  # noqa: ARG002 - `command` required by API
@@ -159,4 +163,4 @@ class AntiDupePlugin(Plugin):
             self._cooldowns.purge_older_than(3600)
             self._stats_service.prune(keep_latest=max(500, self._config_loader.config.max_logs))
         except Exception as exc:  # noqa: BLE001
-            self.logger.warning("Housekeeping task failed: %s", exc)
+            self.logger.warning(f"Housekeeping task failed: {exc}")

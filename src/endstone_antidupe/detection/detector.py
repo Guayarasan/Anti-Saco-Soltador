@@ -95,7 +95,7 @@ class Detector(ABC):
 
         player_name = getattr(player, "name", "unknown")
         if not self.context.rate_limiter.allow(player_name):
-            self.context.logger.debug("Rate limit reached for %s, suppressing report", player_name)
+            self.context.logger.debug(f"Rate limit reached for {player_name}, suppressing report")
             return None
 
         level = ConfidenceLevel.from_score(raw_score, self.detector_config.thresholds)

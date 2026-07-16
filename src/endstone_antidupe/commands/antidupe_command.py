@@ -79,7 +79,7 @@ class AntiDupeCommandHandler:
             self._registry.reload(config)
             sender.send_message(self._translator.t("plugin.reload_success"))
         except Exception as exc:  # noqa: BLE001
-            self._logger.error("Reload failed: %s", exc)
+            self._logger.error(f"Reload failed: {exc}")
             sender.send_message(self._translator.t("plugin.reload_failed", error=str(exc)))
 
     def _stats_cmd(self, sender, args: list[str]) -> None:

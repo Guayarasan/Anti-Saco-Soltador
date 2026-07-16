@@ -44,4 +44,4 @@ class AlertService:
                     player.send_message(message)
             self._server.logger.info(message)
         except Exception as exc:  # noqa: BLE001 - alerting must never crash the server
-            self._logger.warning("Failed to broadcast alert: %s", exc)
+            self._logger.warning(f"Failed to broadcast alert: {exc}")

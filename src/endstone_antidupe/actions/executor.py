@@ -37,9 +37,9 @@ class ActionExecutor:
         for name in action_names:
             action = self._actions.get(name)
             if action is None:
-                self._logger.warning("Unknown action '%s' referenced in config.yml", name)
+                self._logger.warning(f"Unknown action '{name}' referenced in config.yml")
                 continue
             try:
                 action.execute(detection, detector, self.service_context)
             except Exception as exc:  # noqa: BLE001 - one bad action must not break the rest
-                self._logger.warning("Action '%s' raised an exception: %s", name, exc)
+                self._logger.warning(f"Action '{name}' raised an exception: {exc}")

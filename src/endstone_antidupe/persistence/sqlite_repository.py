@@ -47,7 +47,7 @@ class SQLiteDetectionRepository(DetectionRepository):
             )
             self._db.commit()
         except Exception as exc:  # noqa: BLE001 - persistence must never crash the server
-            self._logger.warning("Failed to persist detection: %s", exc)
+            self._logger.warning(f"Failed to persist detection: {exc}")
 
     def history_for(self, player_name: str, limit: int = 50, offset: int = 0) -> list[Detection]:
         rows = self._db.execute(

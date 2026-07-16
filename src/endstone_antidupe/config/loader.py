@@ -107,7 +107,7 @@ class ConfigLoader:
 
     def _read_raw(self) -> dict:
         if not self._path.exists():
-            self._logger.info("config.yml not found, creating defaults at %s", self._path)
+            self._logger.info(f"config.yml not found, creating defaults at {self._path}")
             self._write_raw(DEFAULT_CONFIG)
             return copy.deepcopy(DEFAULT_CONFIG)
         try:
@@ -118,7 +118,7 @@ class ConfigLoader:
             return data
         except Exception as exc:  # noqa: BLE001 - never let bad YAML crash the server
             self._logger.warning(
-                "Failed to parse config.yml (%s). Falling back to defaults.", exc
+                f"Failed to parse config.yml ({exc}). Falling back to defaults."
             )
             return copy.deepcopy(DEFAULT_CONFIG)
 
@@ -128,11 +128,11 @@ class ConfigLoader:
             with self._path.open("w", encoding="utf-8") as fh:
                 yaml.safe_dump(data, fh, allow_unicode=True, sort_keys=False)
         except Exception as exc:  # noqa: BLE001
-            self._logger.warning("Failed to write config.yml: %s", exc)
+            self._logger.warning(f"Failed to write config.yml: {exc}")
 
     def _notify(self) -> None:
         for callback in self._on_reload_callbacks:
             try:
                 callback(self._config)
             except Exception as exc:  # noqa: BLE001
-                self._logger.warning("Config reload callback failed: %s", exc)
+                self._logger.warning(f"Config reload callback failed: {exc}")

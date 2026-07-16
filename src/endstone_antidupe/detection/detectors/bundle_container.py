@@ -160,9 +160,9 @@ class BundleContainerDetector(Detector):
                 original_type = f"minecraft:{self._short_type(block.type)}"
                 block.set_type("minecraft:air", apply_physics=False)
                 block.set_type(original_type, apply_physics=False)
-                self.context.logger.debug("Reset %s at (%s, %s, %s)", block_type, x, y, z)
+                self.context.logger.debug(f"Reset {block_type} at ({x}, {y}, {z})")
             except Exception as exc:  # noqa: BLE001 - world mutation must never crash the server
-                self.context.logger.warning("Failed to reset container: %s", exc)
+                self.context.logger.warning(f"Failed to reset container: {exc}")
 
     def _try_remove_from_inventory(self, dim_name, x, y, z) -> None:
         """Best-effort slot-level bundle removal for non-resettable
@@ -185,7 +185,7 @@ class BundleContainerDetector(Detector):
                 if item is not None and "bundle" in str(getattr(item, "type", "")).lower():
                     inventory.set_item(i, None)
         except Exception as exc:  # noqa: BLE001
-            self.context.logger.debug("Slot-level removal unavailable: %s", exc)
+            self.context.logger.debug(f"Slot-level removal unavailable: {exc}")
 
     # -- helpers -----------------------------------------------------------
 

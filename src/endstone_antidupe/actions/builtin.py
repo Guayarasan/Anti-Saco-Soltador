@@ -16,15 +16,10 @@ class LogAction(Action):
     def execute(self, detection: Detection, detector, context) -> None:
         context.metrics.incr("actions.log")
         context.logger.info(
-            "[%s] %s at (%.0f, %.0f, %.0f) in %s — confidence %.1f%% (%s)",
-            detector.display_name,
-            detection.player_name,
-            detection.position.x,
-            detection.position.y,
-            detection.position.z,
-            detection.position.dimension,
-            detection.confidence_score,
-            detection.confidence_level.name,
+            f"[{detector.display_name}] {detection.player_name} at "
+            f"({detection.position.x:.0f}, {detection.position.y:.0f}, {detection.position.z:.0f}) "
+            f"in {detection.position.dimension} — confidence {detection.confidence_score:.1f}% "
+            f"({detection.confidence_level.name})"
         )
         context.stats_service.record(detection)
 
@@ -69,4 +64,4 @@ class RemoveItemAction(Action):
             callback()
             context.metrics.incr("actions.remove_item")
         except Exception as exc:  # noqa: BLE001
-            context.logger.warning("remove_item action failed: %s", exc)
+            context.logger.warning(f"remove_item action failed: {exc}")
