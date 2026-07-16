@@ -28,8 +28,6 @@ On top of that proven core, this detector adds:
   gracefully otherwise.
 """
 
-from __future__ import annotations
-
 from endstone.event import PacketSendEvent, PlayerInteractEvent, event_handler
 
 from endstone_antidupe.detection.detector import Detector
