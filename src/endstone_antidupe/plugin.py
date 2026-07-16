@@ -49,7 +49,7 @@ class AntiDupePlugin(Plugin):
     commands = {
         "antidupe": {
             "description": "Manage the AntiDupe plugin.",
-            "usages": ["/antidupe (reload|stats|history|toggle|clear|metrics|help)"],
+            "usages": ["/antidupe (reload|stats|history|toggle|clear|metrics|help)<action: AntiDupeAction>"],
             "permissions": [Permissions.COMMAND_USE],
         }
     }
@@ -88,11 +88,6 @@ class AntiDupePlugin(Plugin):
         data_dir = Path(self.data_folder)
         data_dir.mkdir(parents=True, exist_ok=True)
 
-        # So detectors/services can schedule tasks and register events
-        # against the owning Plugin instance without holding a direct
-        # circular reference to this class.
-        self.server.antidupe_owner = self
-
         self._config_loader = ConfigLoader(data_dir / "config.yml", logger=self.logger)
         config = self._config_loader.load()
 
@@ -124,6 +119,7 @@ class AntiDupePlugin(Plugin):
 
         detection_context = DetectionContext(
             server=self.server,
+            owner=self,
             config=config,
             translator=self._translator,
             cooldowns=self._cooldowns,

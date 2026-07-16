@@ -21,6 +21,7 @@ from endstone_antidupe.services.rate_limiter import RateLimiter
 @dataclass
 class DetectionContext:
     server: object
+    owner: object
     config: PluginConfig
     translator: Translator
     cooldowns: CooldownManager

@@ -40,7 +40,7 @@ class BundleGroundDetector(Detector):
         self._scan_radius = float(options.get("scan_radius", 16))
 
     def register(self) -> None:
-        plugin = getattr(self.context.server, "antidupe_owner", None)
+        plugin = self.context.owner
         self._scan_task = self.context.server.scheduler.run_task(
             plugin,
             self._scan,

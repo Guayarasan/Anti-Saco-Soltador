@@ -80,10 +80,10 @@ class BundleContainerDetector(Detector):
 
     def _owner_plugin(self):
         # The Endstone event/scheduler APIs require a Plugin instance as
-        # the registration owner; the running plugin injects itself
-        # into the server object as `server.antidupe_owner` at startup
-        # so detectors don't need a direct reference to the plugin.
-        return getattr(self.context.server, "antidupe_owner", None)
+        # the registration owner. The running plugin passes itself in
+        # via DetectionContext.owner so detectors don't need a direct
+        # import-time reference to the plugin class.
+        return self.context.owner
 
     # -- event handling --------------------------------------------------
 
