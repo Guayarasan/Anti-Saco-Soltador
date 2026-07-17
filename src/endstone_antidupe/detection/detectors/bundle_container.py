@@ -94,8 +94,25 @@ class BundleContainerDetector(Detector):
             event.player.dimension.name if hasattr(event.player, "dimension") else "overworld",
             block.x, block.y, block.z, self._short_type(block.type),
         )
+        if self.context.config.debug:
+            self.context.logger.info(
+                f"[bundle_container][debug] {event.player.name} opened "
+                f"{self._short_type(block.type)} at ({block.x}, {block.y}, {block.z}); "
+                f"watching outgoing packets for this player"
+            )
 
     def on_packet_send(self, event: PacketSendEvent) -> None:
+        player = getattr(event, "player", None)
+        watching = player is not None and player.name in self._last_container
+
+        if self.context.config.debug and watching:
+            payload_preview = getattr(event, "payload", b"") or b""
+            self.context.logger.info(
+                f"[bundle_container][debug] packet_id={event.packet_id} "
+                f"len={len(payload_preview)} to {player.name} "
+                f"first_bytes={payload_preview[:40]!r}"
+            )
+
         if event.packet_id != INVENTORY_CONTENT_PACKET_ID:
             return
         payload = getattr(event, "payload", b"") or b""
@@ -105,8 +122,7 @@ class BundleContainerDetector(Detector):
         except AttributeError:
             return
 
-        player = getattr(event, "player", None)
-        if player is None or player.name not in self._last_container:
+        if not watching:
             return
 
         dim_name, x, y, z, block_type = self._last_container.pop(player.name)
