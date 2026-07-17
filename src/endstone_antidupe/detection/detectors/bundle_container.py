@@ -45,6 +45,7 @@ class BundleContainerDetector(Detector):
         super().__init__(context)
         self._watched_containers: set[str] = set()
         self._last_container: dict[str, tuple] = {}  # player name -> (dim, x, y, z, block_type)
+        self._container_window: dict[str, int] = {}  # player name -> window id of the opened container
         self._pending_reset: set[tuple] = set()
         self._batch_task = None
         self._cleanup_task = None
@@ -94,6 +95,7 @@ class BundleContainerDetector(Detector):
             event.player.dimension.name if hasattr(event.player, "dimension") else "overworld",
             block.x, block.y, block.z, self._short_type(block.type),
         )
+        self._container_window.pop(event.player.name, None)
         if self.context.config.debug:
             self.context.logger.info(
                 f"[bundle_container][debug] {event.player.name} opened "
@@ -105,27 +107,41 @@ class BundleContainerDetector(Detector):
         player = getattr(event, "player", None)
         watching = player is not None and player.name in self._last_container
 
-        if self.context.config.debug and watching:
-            payload_preview = getattr(event, "payload", b"") or b""
-            self.context.logger.info(
-                f"[bundle_container][debug] packet_id={event.packet_id} "
-                f"len={len(payload_preview)} to {player.name} "
-                f"first_bytes={payload_preview[:40]!r}"
-            )
-
         if event.packet_id != INVENTORY_CONTENT_PACKET_ID:
             return
         payload = getattr(event, "payload", b"") or b""
+        if not payload:
+            return
+
+        if watching:
+            window_id = payload[0]
+            known_window = self._container_window.get(player.name)
+            if known_window is None and window_id != 0:
+                # First InventoryContent packet after opening the container
+                # tells us which window id belongs to it (0 is always the
+                # player's own inventory, never the container we opened).
+                self._container_window[player.name] = window_id
+                known_window = window_id
+
+            if self.context.config.debug and window_id == known_window:
+                self.context.logger.info(
+                    f"[bundle_container][debug] container window={window_id} "
+                    f"len={len(payload)} to {player.name} payload={payload!r}"
+                )
+
+            if window_id != known_window:
+                return
+        else:
+            return
+
         try:
             if BUNDLE_MARKER not in payload.lower():
                 return
         except AttributeError:
             return
 
-        if not watching:
-            return
-
         dim_name, x, y, z, block_type = self._last_container.pop(player.name)
+        self._container_window.pop(player.name, None)
 
         if player.has_permission("antidupe.bypass"):
             return
